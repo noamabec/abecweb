@@ -34,10 +34,20 @@ function renderWork() {
 function heroIn(delay = 0) {
   const title = document.querySelector('.hero__title');
   if (reducedMotion || !gsap) { root.classList.add('hero-ready'); return; }
-  const split = window.SplitText ? new window.SplitText(title, { type: 'lines', mask: 'lines', linesClass: 'line' }) : null;
   const tl = gsap.timeline({ delay, onStart: () => root.classList.add('hero-ready') });
-  tl.from(split ? split.lines : title, { yPercent: 105, duration: 1.1, stagger: 0.12, ease: 'expo.out' })
-    .from('.hero__lead', { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, '<0.45')
+  // the headline is sketched like the photo: letters rise as a blue outline, then get inked right to left,
+  // and the blue dot lands last, like the pen leaving the paper
+  const dot = title.querySelector('.dot');
+  const split = window.SplitText ? new window.SplitText(title, { type: 'lines,chars', mask: 'lines', linesClass: 'line', charsClass: 'char' }) : null;
+  if (split) {
+    const chars = split.chars.filter((c) => !c.closest('.dot'));
+    title.classList.add('is-sketching');
+    tl.from(chars, { yPercent: 110, rotate: 8, duration: 0.9, stagger: 0.035, ease: 'expo.out' })
+      .to(chars, { color: 'rgba(20, 20, 20, 1)', webkitTextStrokeColor: 'rgba(45, 59, 255, 0)', duration: 0.55, stagger: 0.03, ease: 'power2.inOut' }, 1)
+      .add(() => title.classList.remove('is-sketching'))
+      .fromTo(dot, { yPercent: -260, scale: 0.4, opacity: 0 }, { yPercent: 0, scale: 1, opacity: 1, duration: 0.9, ease: 'bounce.out' }, '-=0.35');
+  } else tl.from(title, { y: 40, opacity: 0, duration: 1, ease: 'expo.out' });
+  tl.from('.hero__lead', { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' }, '<0.1')
     .from('.hero__actions .btn', { y: 16, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, '<0.1')
     .from('.hero__foot > *', { opacity: 0, duration: 0.8, stagger: 0.1 }, '<0.6');
   // the photo is drawn in by the sketch
