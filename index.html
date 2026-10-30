@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>נועם אבקסיס · עיצוב ובניית אתרים</title>
+  <meta name="description" content="עיצוב נקי שמשדר ביטחון. נועם אבקסיס מעצב ובונה אתרי תדמית, חנויות אונליין ודפי נחיתה לעסקים שכבר מוכיחים את עצמם בשטח.">
+  <meta name="theme-color" content="#F3F2EE">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="נועם אבקסיס · עיצוב נקי שמשדר ביטחון">
+  <meta property="og:description" content="אתרי תדמית, חנויות אונליין ודפי נחיתה, שנבנים מאפס סביב העסק שלכם.">
+  <meta property="og:image" content="assets/img/og.jpg">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/FbAbsolutiHeb-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/FbAbsolutiHeb-LIght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=9">
+  <script>
+    // decide before first paint whether the intro plays (once per visit, never with reduced motion)
+    (function () {
+      var d = document.documentElement, seen = false, a = {};
+      try { seen = sessionStorage.getItem('abec-intro') === '1'; } catch (e) {}
+      try { a = JSON.parse(localStorage.getItem('abec-a11y') || '{}') || {}; } catch (e) {}
+      ['text', 'contrast', 'motion', 'links'].forEach(function (k) { if (a[k]) d.classList.add('a11y-' + k); });
+      if (!seen && !a.motion && !matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('intro-on');
+      d.classList.add('js');
+    })();
+  </script>
+</head>
+<body class="page-home">
+  <div class="intro" aria-hidden="true">
+    <div class="intro__paper">
+      <p class="intro__name"><span class="logo__edge"></span><span class="logo__first">נועם</span><span class="logo__last">אבקסיס</span></p>
+    </div>
+    <div class="intro__dark"></div>
+    <div class="intro__pusher">
+      <img src="assets/img/push-1.webp" alt="" width="653" height="900">
+      <img src="assets/img/push-2.webp" alt="" width="714" height="900">
+      <img src="assets/img/push-3.webp" alt="" width="716" height="900">
+      <img src="assets/img/push-4.webp" alt="" width="660" height="900">
+      <span class="intro__shadow"></span>
+    </div>
+    <button class="intro__skip" type="button" tabindex="-1">דילוג</button>
+  </div>
+
+  <main id="main">
+    <!-- 1 · Hero -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero__copy">
+        <h1 class="hero__title" id="hero-title">עיצוב נקי<br> שמשדר ביטחון<span class="dot">.</span></h1>
+        <p class="hero__lead">אני נועם, ואני מעצב ובונה אתרי תדמית, חנויות ודפי נחיתה לעסקים שכבר מוכיחים את עצמם בשטח. כל אתר נבנה מאפס סביב העסק שלכם, כדי שמי שנכנס יבין מהר למה לבחור דווקא בכם.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#contact">לשיחת היכרות קצרה <svg class="ico-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="btn btn--ghost" href="#work">לעבודות שלי</a>
+        </div>
+      </div>
+      <div class="hero__figure">
+        <span class="hero__edge" aria-hidden="true"></span>
+        <img class="hero__photo" src="assets/img/hero-noam.webp" alt="נועם אבקסיס, ידיים שלובות" width="1000" height="1500" fetchpriority="high">
+        <!-- the blue sketch: drawn first, then peeks under the mouse -->
+        <img class="hv4" src="assets/img/hero-sketch.webp" alt="" width="1000" height="1500" aria-hidden="true">
+        <div class="hv4-peek" aria-hidden="true"></div>
+        <span class="hv4-pen" aria-hidden="true"></span>
+      </div>
+      <div class="hero__foot">
+        <ul class="hero__types" aria-label="מה אני בונה">
+          <li>אתרי תדמית</li><li>חנויות אונליין</li><li>דפי נחיתה</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 2 · Process -->
+    <section class="process" id="process" aria-labelledby="process-title">
+      <header class="sec-head">
+        <h2 class="sec-title" id="process-title" data-edge>ככה נבנה האתר שלכם<span class="dot">.</span></h2>
+        <p class="sec-note"><span class="mono">(3)</span> שלבים, ומאחורי כל אחד מהם אני.</p>
+      </header>
+
+      <article class="stage" data-stage="0">
+        <div class="stage__frame"><img src="assets/img/stage-spec.webp" alt="נועם מחזיק מחברת סקיצות עם מבנה של אתר" width="1000" height="1500" loading="lazy"></div>
+        <div class="stage__copy">
+          <p class="stage__num"><span class="stage__digit">01</span><span class="stage__name">אפיון</span></p>
+          <h3 class="stage__title">קודם מבינים את העסק.</h3>
+          <p class="stage__text">לפני שמזיזים פיקסל, יושבים לשיחת אפיון: מי הלקוחות שלכם, מה מבדל אתכם מהמתחרים, ומה אתם רוצים שהם יעשו באתר. מכאן נבנים מפת האתר והתוכן של כל עמוד.</p>
+          <ul class="tags"><li>שיחת אפיון</li><li>מפת אתר</li><li>תוכן לכל עמוד</li></ul>
+        </div>
+      </article>
+
+      <article class="stage" data-stage="1">
+        <div class="stage__frame"><img src="assets/img/stage-design.webp" alt="נועם מחזיק מניפת דוגמאות צבע" width="1000" height="1500" loading="lazy"></div>
+        <div class="stage__copy">
+          <p class="stage__num"><span class="stage__digit">02</span><span class="stage__name">עיצוב</span></p>
+          <h3 class="stage__title">עיצוב שנולד מהעסק שלכם.</h3>
+          <p class="stage__text">בלי תבניות מוכנות. צבעים, פונטים ותמונות נבחרים לפי מה שמבדל אתכם, ואתם מקבלים את כל המסכים, במחשב ובנייד, לאישור לפני שנכתבת שורת קוד.</p>
+          <ul class="tags"><li>שפה עיצובית</li><li>מחשב ונייד</li><li>אנימציות</li></ul>
+        </div>
+      </article>
+
+      <article class="stage" data-stage="2">
+        <div class="stage__frame"><img src="assets/img/stage-dev.webp" alt="נועם מחזיק מחשב נייד" width="1000" height="1500" loading="lazy"></div>
+        <div class="stage__copy">
+          <p class="stage__num"><span class="stage__digit">03</span><span class="stage__name">פיתוח</span></p>
+          <h3 class="stage__title">אתר מהיר שמוכן לעבודה.</h3>
+          <p class="stage__text">אני בונה את האתר בקוד מותאם: מהיר, נגיש ומותאם לנייד, עם וואטסאפ, טפסים, ואם צריך, חנות עם סליקה. וגם אחרי שהאתר עולה לאוויר, אני כאן.</p>
+          <ul class="tags"><li>קוד מותאם</li><li>נגישות</li><li>מהירות ו-SEO</li></ul>
+        </div>
+      </article>
+    </section>
+
+    <!-- 3 · Work -->
+    <section class="work" id="work" aria-labelledby="work-title">
+      <header class="work-head">
+        <h2 class="work-head__title" id="work-title" data-edge>עבודות<sup class="mono">(04)</sup></h2>
+        <p class="work-head__note">בכל אחד מהם יש מסר אחד ברור, הרבה אוויר ותנועה שמובילה את העין למקום הנכון.</p>
+      </header>
+      <div class="work-grid" data-work-grid></div>
+      <div class="sec-cta">
+        <a class="btn btn--primary" href="#contact">לשיחת היכרות קצרה <svg class="ico-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </section>
+
+    <!-- 4 · Marquee -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>אתרי תדמית</span><i>✦</i><span>חנויות אונליין</span><i>✦</i><span>דפי נחיתה</span><i>✦</i><span>אפיון</span><i>✦</i><span>עיצוב</span><i>✦</i><span>פיתוח</span><i>✦</i>
+        <span>אתרי תדמית</span><i>✦</i><span>חנויות אונליין</span><i>✦</i><span>דפי נחיתה</span><i>✦</i><span>אפיון</span><i>✦</i><span>עיצוב</span><i>✦</i><span>פיתוח</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- 5 · About -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="about__inner">
+        <div class="about__copy">
+          <h2 class="sec-title sec-title--light" id="about-title" data-edge>נעים מאוד, נועם<span class="dot">.</span></h2>
+          <div class="about__text">
+            <p>אשתי ואני חלמנו לגור בקריביים. שם אין הרבה דרכים להתפרנס חוץ מעבודה מרחוק, ומהר מאוד הבנתי שאני תלוי לגמרי ביכולת שלי להיראות. בדיוק כמו בעלי העסקים שאני עובד איתם היום.</p>
+            <p>הרבה עסקים מוכרים מוצר מצוין, אבל ברשת הם נראים קטנים ממה שהם באמת: בלי אתר בכלל, או עם אתר שלא מספר את הסיפור שלהם. לקוח שמחפש אותם בגוגל לא מתרשם, ופשוט הולך למתחרה בלי להגיד מילה.</p>
+            <p>אז אני בונה לעסקים כאלה אתר מאפס, סביב הסיפור והמוצר שלהם, בעיצוב נקי שמדבר בשבילם. מי שמקבל את הכתובת נכנס, מתרשם, ומה שהוא רואה כבר עושה חצי מהעבודה.</p>
+          </div>
+          <blockquote class="about__quote">עיצוב טוב מבדל את העסק מהמתחרים, ומשדר ביטחון ללקוחות שלו.</blockquote>
+          <a class="btn btn--primary" href="#contact">לשיחת היכרות קצרה <svg class="ico-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+        <figure class="about__figure">
+          <img src="assets/img/about-noam.webp" alt="נועם אבקסיס על רקע שחור" width="1100" height="1650" loading="lazy">
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script type="module" src="js/main.js?v=3"></script>
+</body>
+</html>

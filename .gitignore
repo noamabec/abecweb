@@ -1,0 +1,8 @@
+# source material and raw photos (large, not part of the site)
+assets-src/
+תמונות/
+# internal working docs and local tools
+.claude/
+אפיון-אתר-אישי.md
+design-brief.md
+serve.ps1
