@@ -129,7 +129,8 @@ export async function initParticles({ section, stages, accent = [0.176, 0.231, 1
   let dpr = 1, W = 0, H = 0;
   const resize = () => {
     dpr = Math.min(2, window.devicePixelRatio || 1);
-    W = window.innerWidth; H = window.innerHeight;
+    // the visible area without the scrollbar, the same box the canvas covers
+    W = canvas.clientWidth; H = canvas.clientHeight;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
   };
@@ -183,9 +184,7 @@ export async function initParticles({ section, stages, accent = [0.176, 0.231, 1
     gl.uniform4f(U.uRectA, rA.left, rA.top, rA.width, rA.height);
     gl.uniform4f(U.uRectB, rB.left, rB.top, rB.width, rB.height);
     gl.uniform2f(U.uRes, W, H);
-    // every particle (even the last, seeded-late ones) lands by t = 0.86, so the cloud is still and in place
-    // before the photo fades in over it from 0.9
-    gl.uniform1f(U.uT, Math.min(1, t / 0.86));
+    gl.uniform1f(U.uT, t);
     gl.uniform1f(U.uTime, now / 1000);
     gl.uniform1f(U.uSize, Math.max(1.6, (rB.width / cols) * 1.35));
     gl.uniform1f(U.uDpr, dpr);

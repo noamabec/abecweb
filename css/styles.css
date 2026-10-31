@@ -312,7 +312,8 @@ main {
 /* blend so text always reads as if it sits on top of the fragments */
 .cursor-trail--light { mix-blend-mode: multiply; }
 .cursor-trail--dark { mix-blend-mode: screen; }
-.particles { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; }
+/* 100% of the viewport, not 100vw: 100vw includes the scrollbar and, in RTL, pushes the canvas off the left edge */
+.particles { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 
 /* ---------- work ---------- */
 .work { padding-top: var(--sec); }
