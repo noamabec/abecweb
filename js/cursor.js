@@ -1,7 +1,7 @@
 // A light trail of fragments behind the mouse, echoing the particles in the process section.
 // Desktop with a real mouse only. Two blended layers keep text reading on top:
 // on light areas the fragments multiply (ink stays ink), on dark areas they screen (light text stays light).
-const DARK = '.about__inner, .site-footer, .work-card, .p-next__link, .browser, .intro';
+const DARK = '.about__inner, .site-footer, .work-card, .p-next__link, .p-view, .intro';
 
 export function initCursorTrail() {
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;

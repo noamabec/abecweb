@@ -1,9 +1,9 @@
 // Contact details used across the site. Fill these in before publishing.
 export const CONTACT = {
   // international format without "+" or leading 0, e.g. 972501234567
-  whatsapp: '972500000000',
-  phoneDisplay: '050-000-0000',
-  email: 'hello@abecweb.com',
+  whatsapp: '972523231983',
+  phoneDisplay: '052-3231983',
+  email: 'noamab7@gmail.com',
   // leave an entry empty ('') to hide it
   social: {
     instagram: '',

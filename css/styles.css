@@ -426,8 +426,9 @@ main { padding-bottom: var(--sec); }
 .footer__links { display: grid; gap: 4px; margin-bottom: 18px; }
 .footer__links a { font-size: 1.125rem; font-weight: 500; display: inline-block; padding: 4px 0; transition: color 0.4s var(--ease); }
 .footer__links a:hover { color: var(--accent-on-dark); }
-.footer__clock { display: flex; gap: 10px; color: var(--paper-on-dark); }
-.footer__clock .mono { color: var(--paper); }
+/* the logo, in paper on the dark footer */
+.footer__logo { display: inline-block; align-self: flex-start; margin-top: 10px; }
+.footer__logo img { display: block; height: 34px; width: auto; }
 .footer__legal {
   margin-top: clamp(48px, 8vh, 96px); padding-top: 22px; border-top: 1px solid rgba(243, 242, 238, 0.12);
   display: flex; flex-wrap: wrap; gap: 8px 26px; font-size: var(--fs-small); color: var(--paper-on-dark);
@@ -537,7 +538,9 @@ main { padding-bottom: var(--sec); }
 }
 .p-meta dt { font-family: var(--f-mono); font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 6px; }
 .p-meta dd { margin: 0; font-weight: 500; }
-.p-hero__mock { border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-lift); }
+.p-desk { padding: var(--sec) var(--gutter) 0; }
+.p-desk .sec-title { margin-bottom: var(--head-gap); }
+.p-desk__mock { border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-lift); }
 
 .p-story { padding: var(--sec) var(--gutter) 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 48px; }
 .p-story__col:first-child { grid-column: 1 / span 5; }
@@ -545,33 +548,84 @@ main { padding-bottom: var(--sec); }
 .p-story p { font-size: clamp(1.15rem, 1.5vw, 1.45rem); line-height: 1.5; margin-bottom: 28px; }
 .p-label { font-family: var(--f-mono); font-weight: 400; font-size: 0.9rem; color: var(--accent); margin-bottom: 16px; }
 
-.p-full { height: 300svh; margin-top: var(--sec); padding-inline: var(--gutter); }
-.p-full__sticky { position: sticky; top: calc(var(--header-h) + 12px); height: calc(100svh - var(--header-h) - 24px); display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.browser {
-  width: min(100%, 1180px); flex: 1; min-height: 0; display: flex; flex-direction: column;
-  background: var(--ink-2); border-radius: var(--r-card); padding: 0 8px 8px; box-shadow: var(--shadow-lift);
-}
-.browser__bar { height: 42px; display: flex; align-items: center; gap: 16px; padding-inline: 10px; }
-.browser__dots { display: flex; gap: 7px; }
-.browser__dots i { width: 11px; height: 11px; border-radius: 50%; background: rgba(243, 242, 238, 0.22); }
-.browser__url { flex: 1; text-align: center; font-family: var(--f-mono); font-size: 0.78rem; color: var(--paper-on-dark); background: rgba(243, 242, 238, 0.07); border-radius: 8px; padding: 5px 12px; margin-inline-end: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.browser__view { flex: 1; min-height: 0; overflow: hidden; border-radius: var(--r-img); background: #fff; }
-.browser__page { width: 100%; will-change: transform; }
-.p-full__hint { font-size: 0.8rem; color: var(--ink-soft); }
-.p-full.is-static { height: auto; }
-.p-full.is-static .p-full__sticky { position: static; height: 80svh; }
-.p-full.is-static .browser__view { overflow-y: auto; }
+.p-desk__cta, .p-phones__cta { display: flex; justify-content: center; margin-top: clamp(28px, 4vw, 48px); }
 
-.p-phones { padding: var(--sec) var(--gutter) 0; }
-.p-phones .sec-title { margin-bottom: var(--head-gap); }
+/* the full page, on a full screen: a native <dialog>, scrolled by hand */
+.p-view {
+  position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+  background: var(--ink-2); color: var(--paper-on-dark); flex-direction: column;
+}
+.p-view[open] { display: flex; }
+.p-view::backdrop { background: rgba(10, 10, 10, 0.7); }
+.p-view__bar {
+  flex: none; height: 64px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
+  padding-inline: var(--gutter); border-bottom: 1px solid rgba(243, 242, 238, 0.1);
+}
+.p-view__title { font-size: 1rem; font-weight: 500; justify-self: start; }
+.p-view__url {
+  font-size: 0.78rem; background: rgba(243, 242, 238, 0.07); border-radius: 8px; padding: 6px 14px;
+  max-width: 46vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.p-view__close {
+  justify-self: end; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
+  background: rgba(243, 242, 238, 0.1); color: inherit; transition: background-color 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.p-view__close:hover { background: var(--accent); transform: rotate(90deg); }
+.p-view__close svg { width: 20px; height: 20px; }
+.p-view__scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; background: #fff; }
+.p-view__scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.p-view__page { display: block; width: 100%; height: auto; }
+.p-view:not([data-mode="desk"]) .p-view__page[data-mode="desk"], .p-view[data-mode="desk"] .p-view__page[data-mode="mob"] { display: none; }
+/* on a phone the mobile page fills the screen; on a computer it stands as a phone-wide column on the dark backdrop */
+.p-view[data-mode="mob"] .p-view__scroll { background: var(--ink-2); padding-block: 32px; }
+.p-view[data-mode="mob"] .p-view__page { width: min(100%, 390px); margin-inline: auto; border-radius: 24px; box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8); }
+.view-open { overflow: hidden; }
+
+/* the phones lead the page: most visitors arrive on mobile */
 .p-phones__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 4vw, 64px); max-width: 1100px; margin-inline: auto; }
-.phone { border-radius: 38px; padding: 9px; background: var(--ink); box-shadow: var(--shadow-lift); }
-.phone img { width: 100%; aspect-ratio: 390 / 844; object-fit: cover; object-position: top; border-radius: 30px; }
+/* a modern Pro-style phone: titanium edge, thin black bezel, the island, side buttons (sizes in cqw so it scales with the phone) */
+.phone { position: relative; isolation: isolate; container-type: inline-size; margin: 0; }
+.phone__body {
+  position: relative; border-radius: 15.5cqw; padding: 2.4cqw;
+  border: 1.4cqw solid transparent;
+  background:
+    linear-gradient(#050506, #050506) padding-box,
+    linear-gradient(140deg, #b9b6b0 0%, #57554f 18%, #2b2a27 38%, #6f6c66 55%, #2f2e2b 74%, #a9a6a0 100%) border-box;
+  box-shadow: inset 0 0 0 0.35cqw rgba(255, 255, 255, 0.06), 0 2px 3px rgba(0, 0, 0, 0.18), var(--shadow-lift);
+}
+.phone__body img { display: block; width: 100%; aspect-ratio: 390 / 844; object-fit: cover; object-position: top; border-radius: 12cqw; }
+/* the island */
+.phone::after {
+  content: ''; position: absolute; z-index: 2; top: 5.6cqw; left: 50%; transform: translateX(-50%);
+  width: 29cqw; height: 8.4cqw; border-radius: 99px; background: #000;
+  box-shadow: 0 0 0 0.3cqw rgba(0, 0, 0, 0.35);
+}
+/* action and volume buttons on one side, the power button on the other */
+.phone::before {
+  content: ''; position: absolute; z-index: -1; top: 22cqw; left: -0.9cqw; width: 1.4cqw; height: 7cqw; border-radius: 1cqw;
+  background: linear-gradient(90deg, #8f8c86, #3a3935);
+  box-shadow: 0 13cqw 0 0 #55534e, 0 26cqw 0 0 #55534e, calc(100cqw + 0.4cqw) 14cqw 0 0 #55534e;
+}
 
 .p-highs { padding: var(--sec) var(--gutter) 0; }
 .p-highs .sec-title { margin-bottom: var(--head-gap); }
 .p-highs__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
 .p-high { background: #fff; border-radius: var(--r-card); padding: clamp(24px, 2.6vw, 36px); box-shadow: var(--shadow); }
+/* a clip of the moment on the site: still frame until hover (or in view on touch) */
+.p-high__media {
+  position: relative; margin: calc(clamp(24px, 2.6vw, 36px) * -0.5) calc(clamp(24px, 2.6vw, 36px) * -0.5) 26px;
+  border-radius: calc(var(--r-card) - 8px); overflow: hidden; background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.p-high__media img { display: block; width: 100%; height: auto; aspect-ratio: 490 / 325; object-fit: cover; }
+.p-high__play {
+  position: absolute; inset-block-end: 12px; inset-inline-end: 12px; width: 40px; height: 40px; display: grid; place-items: center;
+  border-radius: 50%; color: var(--ink); background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: var(--shadow);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.p-high__play svg { width: 16px; height: 16px; margin-inline-start: 2px; }
+.p-high.is-playing .p-high__play { opacity: 0; transform: scale(0.8); }
 .p-high__num { display: block; color: var(--accent); font-size: 2.6rem; line-height: 1; margin-bottom: 26px; }
 .p-high__title { font-weight: 700; font-size: 1.45rem; line-height: 1.2; margin-bottom: 10px; }
 .p-high p { color: #2a2a28; }
@@ -607,15 +661,13 @@ main { padding-bottom: var(--sec); }
   .p-hero__head { grid-template-columns: 1fr; }
   .p-hero__title { font-size: clamp(4rem, 20vw, 6rem); }
   .p-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
-  .p-hero__mock { border-radius: 16px; }
+  .p-desk__mock { border-radius: 16px; }
+  .p-view__bar { grid-template-columns: 1fr auto; }
+  .p-view__url { display: none; }
+  .p-view[data-mode="mob"] .p-view__scroll { padding-block: 0; }
+  .p-view[data-mode="mob"] .p-view__page { border-radius: 0; }
   .p-story { display: flex; flex-direction: column; }
   .p-story .btn { width: 100%; }
-  .p-full { height: 260svh; }
-  .browser { width: min(100%, 340px); border-radius: 34px; padding: 0 8px 8px; }
-  .browser__bar { height: 34px; }
-  .browser__dots { display: none; }
-  .browser__url { margin-inline-end: 0; }
-  .browser__view { border-radius: 26px; }
   .p-phones__row {
     grid-template-columns: repeat(3, 68vw); overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; touch-action: pan-x pan-y;
     padding-block: 30px 40px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-snap-type: x mandatory; scrollbar-width: none;

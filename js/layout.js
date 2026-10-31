@@ -1,6 +1,6 @@
 // Shared header, mobile menu, footer (contact), floating WhatsApp and accessibility widget.
-import { CONTACT, waLink } from './config.js';
-import { initCursorTrail } from './cursor.js';
+import { CONTACT, waLink } from './config.js?v=2';
+import { initCursorTrail } from './cursor.js?v=2';
 
 const ARROW = '<svg class="ico-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 export { ARROW };
@@ -99,7 +99,7 @@ export function renderLayout({ base = '', home = false } = {}) {
           </ul>
           <p class="footer__label">באתר</p>
           <ul class="footer__links footer__links--nav">${nav.slice(0, 3).map(([h, t]) => `<li><a href="${link(h)}">${t}</a></li>`).join('')}</ul>
-          <p class="footer__clock"><span>ישראל</span> <span class="mono" data-clock>--:--</span></p>
+          <a class="footer__logo" href="${base}index.html" aria-label="נועם אבקסיס, לדף הבית"><img src="${base}assets/img/logo-light.svg" alt="" width="476" height="70" loading="lazy"></a>
         </div>
       </div>
       <div class="footer__legal">
@@ -128,7 +128,6 @@ export function renderLayout({ base = '', home = false } = {}) {
 
   initHeader(header, menu);
   initForm(footer.querySelector('.lead-form'));
-  initClock(footer.querySelector('[data-clock]'));
   initA11y();
   initCursorTrail();
   return { header, footer };
@@ -220,13 +219,6 @@ function initForm(form) {
     form.classList.add('is-done');
     form.querySelector('.lead-form__done').hidden = false;
   });
-}
-
-function initClock(el) {
-  const fmt = new Intl.DateTimeFormat('he-IL', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem', hour12: false });
-  const tick = () => { el.textContent = fmt.format(new Date()); };
-  tick();
-  setInterval(tick, 20000);
 }
 
 function initA11y() {
