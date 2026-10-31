@@ -1,4 +1,4 @@
-import { renderLayout, ARROW } from './layout.js?v=2';
+import { renderLayout, ARROW } from './layout.js?v=3';
 import { PROJECTS } from './projects.js';
 import { mockMarkup, initMock } from './screens.js';
 import { initParticles } from './particles.js';
