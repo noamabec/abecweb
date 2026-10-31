@@ -134,10 +134,9 @@ main {
   height: 100%; padding-inline: var(--gutter);
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;
 }
-.logo { display: inline-flex; align-items: center; gap: 0.3em; font-size: 1.3rem; line-height: 1; justify-self: start; letter-spacing: -0.01em; }
-.logo__edge { display: inline-block; width: 0.16em; height: 1.05em; background: var(--accent); border-radius: 2px; margin-inline-end: 0.12em; }
-.logo__first { font-weight: 700; }
-.logo__last { font-weight: 300; }
+.logo { display: inline-flex; align-items: center; justify-self: start; }
+/* the Figma logo: NOAM + abecassis., with the blue edge line and dot */
+.logo__img { display: block; height: 30px; width: auto; }
 .nav { display: flex; gap: clamp(20px, 2.6vw, 40px); }
 .nav a { position: relative; font-weight: 500; font-size: 1rem; padding: 8px 0; }
 .nav a::after {
@@ -181,11 +180,8 @@ main {
 .intro { display: none; }
 .intro-on .intro { display: block; position: fixed; inset: 0; z-index: 1000; overflow: hidden; }
 .intro__paper { position: absolute; inset: 0; background: var(--paper); display: grid; place-items: center; }
-.intro__name {
-  display: inline-flex; align-items: center; gap: 0.3em;
-  font-size: clamp(3rem, min(11vw, 19vh), 11rem); line-height: 1; letter-spacing: -0.02em;
-  will-change: transform;
-}
+.intro__name { display: inline-flex; align-items: center; will-change: transform; }
+.intro__name .logo__img { height: clamp(40px, min(11vw, 18vh), 170px); }
 .intro__dark { position: absolute; inset: 0; background: var(--ink); will-change: clip-path; }
 .intro__pusher {
   position: absolute; left: 0; bottom: 8vh; height: min(74vh, 700px, 112vw); aspect-ratio: 0.76;
@@ -476,6 +472,7 @@ main { padding-bottom: var(--sec); }
 }
 @media (max-width: 767px) {
   :root { --header-h: 64px; }
+  .site-header .logo__img { height: 26px; }
   .hero { display: block; min-height: 0; padding-top: calc(var(--header-h) + 28px); overflow: visible; }
   .hero__copy { padding-bottom: 0; }
   .hero__title { font-size: clamp(2.7rem, 12.5vw, 4rem); }

@@ -11,7 +11,7 @@ const A11Y_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" c
 const SOCIAL_LABEL = { instagram: 'אינסטגרם', facebook: 'פייסבוק', linkedin: 'לינקדאין' };
 
 export function logoMarkup(tag = 'a', base = '') {
-  const inner = '<span class="logo__edge" aria-hidden="true"></span><span class="logo__first">נועם</span><span class="logo__last">אבקסיס</span>';
+  const inner = `<img class="logo__img" src="${base}assets/img/logo.svg" alt="Noam Abecassis" width="484" height="75">`;
   return tag === 'a'
     ? `<a class="logo" href="${base}index.html" aria-label="נועם אבקסיס, לדף הבית">${inner}</a>`
     : `<span class="logo">${inner}</span>`;
