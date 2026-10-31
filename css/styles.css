@@ -503,7 +503,8 @@ main { padding-bottom: var(--sec); }
   .sec-head { flex-direction: column; align-items: flex-start; }
   .stage { display: flex; flex-direction: column; align-items: stretch; margin-bottom: 120px; }
   .stage__frame { height: auto; width: min(78vw, 400px); order: 0; margin-bottom: 30px; }
-  .stage__copy { order: 1; }
+  /* the particles pass behind the text: a soft paper halo (feathered, no visible box) keeps it readable */
+  .stage__copy { order: 1; background: var(--paper); border-radius: 28px; box-shadow: 0 0 28px 22px var(--paper); }
   .stage__digit { font-size: 3.6rem; }
   .work-head { grid-template-columns: 1fr; }
   .work-head__title { font-size: clamp(4.4rem, 22vw, 6.5rem); }
