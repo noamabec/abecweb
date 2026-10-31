@@ -78,9 +78,10 @@ main.innerHTML = `
     <ol class="p-highs__list">
       ${p.highlights.map(([t, d], i) => `
         <li class="p-high" data-reveal>
-          <div class="p-high__media">
-            <img src="${base}assets/clips/${p.slug}-${i + 1}.jpg" data-clip="${base}assets/clips/${p.slug}-${i + 1}.webp" alt="${t}, ככה זה נראה באתר" width="490" height="325" loading="lazy" decoding="async">
-            <span class="p-high__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
+          <span class="p-high__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
+          <div class="p-high__media" aria-hidden="true">
+            <img data-clip="${base}assets/clips/${p.slug}-${i + 1}.webp" data-still="${base}assets/clips/${p.slug}-${i + 1}.jpg" alt="" width="490" height="325" decoding="async">
+            <span class="p-high__cap"><span class="mono">${two(i + 1)}</span> ${t}</span>
           </div>
           <span class="p-high__num mono">${two(i + 1)}</span>
           <h3 class="p-high__title">${t}</h3>
@@ -106,23 +107,37 @@ if (!reducedMotion && gsap && ScrollTrigger) {
   gsap.from('.phone', { y: 70, opacity: 0, duration: 1.1, stagger: 0.12, ease: 'expo.out', delay: 0.2 });
 }
 
-// each highlight card holds a short clip of that moment on the site: it plays on hover,
-// or on touch screens while the card is in view (the still frame stays for reduced motion)
+// each highlight card hides a short clip of that moment on the site: on hover it bursts out of the
+// play chip and fills the card, on leave it shrinks back into it (touch screens: a tap opens and closes it;
+// reduced motion: the still frame, without the burst)
 const hover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 main.querySelectorAll('.p-high').forEach((card) => {
-  const img = card.querySelector('.p-high__media img');
-  const still = img.src;
+  const media = card.querySelector('.p-high__media');
+  const img = media.querySelector('img');
+  const chip = card.querySelector('.p-high__play');
+  const src = reducedMotion ? img.dataset.still : img.dataset.clip;
+  let off;
+  // warm the cache before the card is reached, so the clip is ready on the first hover
+  new IntersectionObserver(([e], io) => { if (e.isIntersecting) { new Image().src = src; io.disconnect(); } }, { rootMargin: '300px' }).observe(card);
   const play = (on) => {
-    if (reducedMotion) return;
-    // setting the src again restarts the animation from its first frame
-    img.src = on ? img.dataset.clip : still;
-    card.classList.toggle('is-playing', on);
+    clearTimeout(off);
+    if (on) {
+      const m = media.getBoundingClientRect(), c = chip.getBoundingClientRect();
+      media.style.setProperty('--ox', `${c.left + c.width / 2 - m.left}px`);
+      media.style.setProperty('--oy', `${c.top + c.height / 2 - m.top}px`);
+      // setting the src again restarts the clip from its first frame
+      img.src = src;
+      requestAnimationFrame(() => card.classList.add('is-playing'));
+    } else {
+      card.classList.remove('is-playing');
+      off = setTimeout(() => img.removeAttribute('src'), 700);
+    }
   };
   if (hover) {
     card.addEventListener('mouseenter', () => play(true));
     card.addEventListener('mouseleave', () => play(false));
   } else {
-    new IntersectionObserver(([e]) => play(e.isIntersecting), { threshold: 0.6 }).observe(card);
+    card.addEventListener('click', () => play(!card.classList.contains('is-playing')));
   }
 });
 
