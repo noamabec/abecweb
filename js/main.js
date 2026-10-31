@@ -1,7 +1,7 @@
 import { renderLayout, ARROW } from './layout.js?v=9';
 import { PROJECTS } from './projects.js';
 import { mockMarkup, initMock } from './screens.js';
-import { initParticles } from './particles.js';
+import { initParticles } from './particles.js?v=3';
 import { initCommon, reducedMotion } from './common.js';
 import { initHeroSketch } from './hero-sketch.js?v=2';
 

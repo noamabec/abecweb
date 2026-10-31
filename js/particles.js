@@ -37,6 +37,17 @@ const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const smooth = (a, b, v) => { const t = clamp01((v - a) / (b - a)); return t * t * (3 - 2 * t); };
 const rand = (seed) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
 
+// where the photo is actually painted inside its box (object-fit: contain + object-position),
+// so the particles land exactly on the picture and the photo takes over without a jump
+function paintedRect(img) {
+  const b = img.getBoundingClientRect();
+  const ir = img.naturalWidth / img.naturalHeight || b.width / b.height;
+  const [px, py] = getComputedStyle(img).objectPosition.split(' ').map((v) => parseFloat(v) / 100);
+  let w = b.width, h = b.height;
+  if (b.width / b.height > ir) w = h * ir; else h = w / ir;
+  return { left: b.left + (b.width - w) * (isNaN(px) ? 0.5 : px), top: b.top + (b.height - h) * (isNaN(py) ? 0.5 : py), width: w, height: h };
+}
+
 async function samplePortrait(img, cols, rows) {
   if (!img.complete || !img.naturalWidth) await new Promise((r) => img.addEventListener('load', r, { once: true }));
   try { await img.decode(); } catch {}
@@ -132,8 +143,8 @@ export async function initParticles({ section, stages, accent = [0.176, 0.231, 1
   const frame = (now) => {
     requestAnimationFrame(frame);
     if (!active) return;
-    const rects = boxes.map((b) => b.getBoundingClientRect());
-    const cy = rects.map((r) => r.top + r.height / 2);
+    const cy = boxes.map((b) => { const r = b.getBoundingClientRect(); return r.top + r.height / 2; });
+    const rects = imgs.map(paintedRect);
     const mid = H * 0.5;
     // scroll progress of each segment: gather -> 0, 0 -> 1, 1 -> 2
     // HOLD keeps each photo sharp for a stretch of scroll around its resting point
@@ -172,7 +183,9 @@ export async function initParticles({ section, stages, accent = [0.176, 0.231, 1
     gl.uniform4f(U.uRectA, rA.left, rA.top, rA.width, rA.height);
     gl.uniform4f(U.uRectB, rB.left, rB.top, rB.width, rB.height);
     gl.uniform2f(U.uRes, W, H);
-    gl.uniform1f(U.uT, t);
+    // every particle (even the last, seeded-late ones) lands by t = 0.86, so the cloud is still and in place
+    // before the photo fades in over it from 0.9
+    gl.uniform1f(U.uT, Math.min(1, t / 0.86));
     gl.uniform1f(U.uTime, now / 1000);
     gl.uniform1f(U.uSize, Math.max(1.6, (rB.width / cols) * 1.35));
     gl.uniform1f(U.uDpr, dpr);
