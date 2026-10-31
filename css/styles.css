@@ -479,7 +479,10 @@ main { padding-bottom: var(--sec); }
 @media (max-width: 960px) {
   .nav, .header-cta { display: none; }
   .menu-btn { display: inline-flex; }
-  .site-header__inner { grid-template-columns: 1fr auto; }
+  /* the compact header: menu on the right, logo on the left (it folds toward the left edge) */
+  .site-header__inner { grid-template-columns: auto 1fr; }
+  .site-header__actions { grid-column: 1; grid-row: 1; justify-self: start; }
+  .site-header .logo { grid-column: 2; grid-row: 1; justify-self: end; }
 }
 @media (max-width: 767px) {
   :root { --header-h: 64px; }
