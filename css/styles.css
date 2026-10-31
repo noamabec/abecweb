@@ -137,6 +137,16 @@ main {
 .logo { display: inline-flex; align-items: center; justify-self: start; }
 /* the Figma logo: NOAM + abecassis., with the blue edge line and dot */
 .logo__img { display: block; height: 30px; width: auto; }
+/* on scroll the name folds into the blue line and the N (the logo is 476×70, the N ends at x≈69); js/layout.js animates it */
+.site-header { --logo-h: 30px; }
+.site-header .logo {
+  --keep: 100%; --soft: 0px;
+  direction: ltr; overflow: hidden; width: calc(var(--logo-h) * 476 / 70);
+  -webkit-mask-image: linear-gradient(to right, #000 var(--keep), transparent calc(var(--keep) + var(--soft)));
+  mask-image: linear-gradient(to right, #000 var(--keep), transparent calc(var(--keep) + var(--soft)));
+}
+.site-header .logo__img { flex: none; height: var(--logo-h); max-width: none; }
+.site-header.is-scrolled .logo { width: var(--logo-h); }
 .nav { display: flex; gap: clamp(20px, 2.6vw, 40px); }
 .nav a { position: relative; font-weight: 500; font-size: 1rem; padding: 8px 0; }
 .nav a::after {
@@ -472,7 +482,7 @@ main { padding-bottom: var(--sec); }
 }
 @media (max-width: 767px) {
   :root { --header-h: 64px; }
-  .site-header .logo__img { height: 26px; }
+  .site-header { --logo-h: 26px; }
   .hero { display: block; min-height: 0; padding-top: calc(var(--header-h) + 28px); overflow: visible; }
   .hero__copy { padding-bottom: 0; }
   .hero__title { font-size: clamp(2.7rem, 12.5vw, 4rem); }

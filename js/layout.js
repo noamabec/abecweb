@@ -134,8 +134,48 @@ export function renderLayout({ base = '', home = false } = {}) {
   return { header, footer };
 }
 
+// On scroll the logo folds into the blue line and the N: the name dissolves letter by letter back
+// into the N, then the N glides to the edge. Scrolling back up plays it in reverse.
+function initLogoFold(header) {
+  const logo = header.querySelector('.logo');
+  const { gsap } = window;
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.classList.contains('a11y-motion');
+  let tl, ready = false;
+  setTimeout(() => { ready = true; }, 0);
+  return (fold, toggle) => {
+    tl?.kill();
+    // hold the current width and mask before the class flips the CSS width (a reversal mid-way continues from there)
+    const from = logo.getBoundingClientRect().width;
+    const cs = getComputedStyle(logo);
+    const midKeep = cs.getPropertyValue('--keep').includes('px') ? cs.getPropertyValue('--keep').trim() : null;
+    const midSoft = cs.getPropertyValue('--soft').trim();
+    toggle();
+    if (!ready || !gsap || reduced()) { gsap?.set(logo, { clearProps: 'width,--keep,--soft' }); return; }
+    const h = parseFloat(getComputedStyle(header).getPropertyValue('--logo-h')) || 30;
+    const full = h * 476 / 70, mark = h;
+    // the mask stays opaque up to --keep and fades out over --soft; the box width does the glide
+    const soft = `${(h * 1.6).toFixed(1)}px`;
+    gsap.set(logo, { width: from });
+    tl = gsap.timeline({ onComplete: () => gsap.set(logo, { clearProps: 'width,--keep,--soft' }) });
+    if (fold) {
+      tl.fromTo(logo, { '--keep': midKeep || `${full}px`, '--soft': midKeep ? midSoft : '0px' }, { '--keep': `${mark}px`, '--soft': soft, duration: 0.7, ease: 'power2.inOut' })
+        .to(logo, { width: mark, duration: 0.85, ease: 'expo.inOut' }, 0.3);
+    } else {
+      tl.set(logo, { '--keep': midKeep || `${mark}px`, '--soft': midKeep ? midSoft : soft })
+        .to(logo, { width: full, duration: 0.85, ease: 'expo.inOut' })
+        .to(logo, { '--keep': `${full}px`, '--soft': '0px', duration: 0.75, ease: 'power2.inOut' }, 0.3);
+    }
+  };
+}
+
 function initHeader(header, menu) {
-  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+  const foldLogo = initLogoFold(header);
+  const onScroll = () => {
+    const scrolled = window.scrollY > 24;
+    if (scrolled === header.classList.contains('is-scrolled')) return;
+    foldLogo(scrolled, () => header.classList.toggle('is-scrolled', scrolled));
+  };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
   const btn = header.querySelector('.menu-btn');
