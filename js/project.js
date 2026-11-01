@@ -2,6 +2,7 @@ import { renderLayout, ARROW } from './layout.js?v=9';
 import { PROJECTS } from './projects.js';
 import { mockMarkup, initMock } from './screens.js';
 import { initCommon, reducedMotion } from './common.js?v=3';
+import { CLIPS } from './clips.js?v=1';
 
 const { gsap, ScrollTrigger } = window;
 const base = '../';
@@ -80,7 +81,9 @@ main.innerHTML = `
         <li class="p-high" data-reveal>
           <span class="p-high__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
           <div class="p-high__media" aria-hidden="true">
-            <img data-clip="${base}assets/clips/${p.slug}-${i + 1}.webp?v=2" data-still="${base}assets/clips/${p.slug}-${i + 1}.jpg" alt="" width="490" height="325" decoding="async">
+            <div class="p-high__frames">
+              ${(CLIPS[`${p.slug}-${i + 1}`] || [0]).map((_, k) => `<img data-src="${base}assets/clips/${p.slug}-${i + 1}-${k + 1}.jpg" alt="" width="490" height="325" decoding="async">`).join('')}
+            </div>
             <span class="p-high__cap"><span class="mono">${two(i + 1)}</span> ${t}</span>
           </div>
           <span class="p-high__num mono">${two(i + 1)}</span>
@@ -109,28 +112,43 @@ if (!reducedMotion && gsap && ScrollTrigger) {
 
 // each highlight card hides a short clip of that moment on the site: on hover it bursts out of the
 // play chip and fills the card, on leave it shrinks back into it (touch screens: a tap opens and closes it;
-// reduced motion: the still frame, without the burst)
+// reduced motion: the first frame, without the burst).
+// The clip is a few still frames the page fades between (holds in js/clips.js), not an animated image:
+// animated WebP glitched on phones.
 const hover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-main.querySelectorAll('.p-high').forEach((card) => {
+main.querySelectorAll('.p-high').forEach((card, i) => {
   const media = card.querySelector('.p-high__media');
-  const img = media.querySelector('img');
+  const frames = [...media.querySelectorAll('.p-high__frames img')];
+  const holds = CLIPS[`${p.slug}-${i + 1}`] || [2000];
   const chip = card.querySelector('.p-high__play');
-  const src = reducedMotion ? img.dataset.still : img.dataset.clip;
-  let off;
-  // warm the cache before the card is reached, so the clip is ready on the first hover
-  new IntersectionObserver(([e], io) => { if (e.isIntersecting) { new Image().src = src; io.disconnect(); } }, { rootMargin: '300px' }).observe(card);
+  let step, at = 0;
+  // load the frames before the card is reached, so the clip is ready on the first hover
+  new IntersectionObserver(([e], io) => {
+    if (e.isIntersecting) { frames.forEach((f) => { f.src = f.dataset.src; }); io.disconnect(); }
+  }, { rootMargin: '300px' }).observe(card);
+  // the next frame fades in on top while the current one stays put beneath it, so nothing dark shows through
+  const show = (k) => {
+    const prev = frames[at];
+    frames.forEach((f) => f.classList.remove('was-on'));
+    if (prev !== frames[k]) { prev.classList.remove('is-on'); prev.classList.add('was-on'); }
+    frames[k].classList.add('is-on');
+    at = k;
+  };
+  const advance = () => {
+    step = setTimeout(() => { show((at + 1) % frames.length); advance(); }, Math.max(900, holds[at]));
+  };
   const play = (on) => {
-    clearTimeout(off);
+    clearTimeout(step);
     if (on) {
       const m = media.getBoundingClientRect(), c = chip.getBoundingClientRect();
       media.style.setProperty('--ox', `${c.left + c.width / 2 - m.left}px`);
       media.style.setProperty('--oy', `${c.top + c.height / 2 - m.top}px`);
-      // setting the src again restarts the clip from its first frame
-      img.src = src;
+      frames.forEach((f) => { if (!f.src) f.src = f.dataset.src; f.classList.remove('is-on', 'was-on'); });
+      at = 0; frames[0].classList.add('is-on');
       requestAnimationFrame(() => card.classList.add('is-playing'));
+      if (!reducedMotion && frames.length > 1) advance();
     } else {
       card.classList.remove('is-playing');
-      off = setTimeout(() => img.removeAttribute('src'), 700);
     }
   };
   if (hover) {
