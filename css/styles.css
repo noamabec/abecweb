@@ -134,6 +134,10 @@ main {
   backdrop-filter: saturate(1.4) blur(14px);
   box-shadow: 0 1px 0 var(--line);
 }
+/* phones: a live blur behind a fixed header makes Android repaint it on every scroll frame and flicker */
+@media (hover: none) {
+  .site-header.is-scrolled { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(243, 242, 238, 0.97); }
+}
 .site-header__inner {
   height: 100%; padding-inline: var(--gutter);
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;

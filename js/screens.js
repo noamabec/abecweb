@@ -26,16 +26,21 @@ function quadMatrix(w, h, p) {
   return `matrix3d(${a},${d},0,${g},${b},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
 }
 
+// The screen is laid out small (about 400px wide) and only then mapped onto the photo: laid out at the
+// captured 1440px, its 9000px-tall scroll image became a layer too big for phone GPUs and the page flickered
+const screenSize = (p) => { const k = Math.min(1, 400 / p.shot.w); return { w: Math.round(p.shot.w * k), h: Math.round(p.shot.h * k), k }; };
+
 export function mockMarkup(p, base = '', { eager = false } = {}) {
   const mob = p.device === 'phone';
+  const { w, h, k } = screenSize(p);
   const scrollSrc = `${base}assets/img/scroll-${p.slug}${mob ? '-mob' : ''}.webp`;
   const scrollH = mob ? 5064 : 9000;
   const loading = eager ? 'eager' : 'lazy';
   return `
     <div class="mock" data-mock="${p.slug}">
       <img class="mock__base" src="${base}assets/img/mock-${p.slug}.webp" alt="" width="1600" height="1195" loading="${loading}" decoding="async">
-      <div class="mock__screen" style="width:${p.shot.w}px;height:${p.shot.h}px">
-        <img class="mock__scroll" src="${scrollSrc}" alt="" width="${p.shot.w}" height="${Math.round((scrollH * p.shot.w) / (mob ? 390 : 1440))}" loading="${loading}" decoding="async">
+      <div class="mock__screen" style="width:${w}px;height:${h}px">
+        <img class="mock__scroll" src="${scrollSrc}" alt="" width="${w}" height="${Math.round((scrollH * p.shot.w * k) / (mob ? 390 : 1440))}" loading="${loading}" decoding="async">
       </div>
       <img class="mock__frame" src="${base}assets/img/mock-${p.slug}-frame.webp" alt="האתר ${p.name} על ${mob ? 'מסך טלפון' : 'מסך מחשב'}" width="1600" height="1195" loading="${loading}" decoding="async">
     </div>`;
@@ -44,13 +49,14 @@ export function mockMarkup(p, base = '', { eager = false } = {}) {
 export function initMock(el, p, { hoverTarget = el, autoplay = !hoverFine } = {}) {
   const screen = el.querySelector('.mock__screen');
   const img = el.querySelector('.mock__scroll');
+  const { w: sw, h: sh, k } = screenSize(p);
   const place = () => {
     const r = el.getBoundingClientRect();
     if (!r.width) return;
     const sx = r.width / MOCK_W, sy = r.height / MOCK_H;
     const s = p.screen;
     const pts = [s.tl, s.tr, s.br, s.bl].map(([x, y]) => [x * sx, y * sy]);
-    screen.style.transform = quadMatrix(p.shot.w, p.shot.h, pts);
+    screen.style.transform = quadMatrix(sw, sh, pts);
   };
   place();
   new ResizeObserver(place).observe(el);
@@ -58,13 +64,13 @@ export function initMock(el, p, { hoverTarget = el, autoplay = !hoverFine } = {}
   if (reduced || !gsap) return;
   let tween = null;
   const travel = () => {
-    const h = img.naturalHeight ? (img.naturalHeight * p.shot.w) / img.naturalWidth : img.height;
-    return Math.max(0, h - p.shot.h);
+    const h = img.naturalHeight ? (img.naturalHeight * sw) / img.naturalWidth : img.height;
+    return Math.max(0, h - sh);
   };
   const run = () => {
     const dist = travel();
     tween?.kill();
-    tween = gsap.to(img, { y: -dist, duration: Math.max(6, dist / (p.device === 'phone' ? 260 : 520)), ease: 'none' });
+    tween = gsap.to(img, { y: -dist, duration: Math.max(6, dist / k / (p.device === 'phone' ? 260 : 520)), ease: 'none' });
   };
   const back = () => {
     tween?.kill();
@@ -83,7 +89,7 @@ export function initMock(el, p, { hoverTarget = el, autoplay = !hoverFine } = {}
       if (en.isIntersecting) {
         if (!loop) {
           const dist = travel();
-          loop = gsap.to(img, { y: -dist, duration: Math.max(8, dist / (p.device === 'phone' ? 200 : 380)), ease: 'sine.inOut', repeat: -1, yoyo: true, repeatDelay: 1.2, delay: 0.6 });
+          loop = gsap.to(img, { y: -dist, duration: Math.max(8, dist / k / (p.device === 'phone' ? 200 : 380)), ease: 'sine.inOut', repeat: -1, yoyo: true, repeatDelay: 1.2, delay: 0.6 });
         } else loop.play();
       } else loop?.pause();
     }, { threshold: 0.55 }).observe(el);
