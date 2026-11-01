@@ -53,7 +53,11 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  /* Android Chrome flashes a box over a tapped card or link, even when the finger only rests there to scroll */
+  -webkit-tap-highlight-color: transparent;
+}
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-stopped { overflow: clip; }
@@ -328,8 +332,8 @@ main {
   background: var(--ink-2); color: var(--paper);
   box-shadow: var(--shadow);
   transition: transform 0.9s var(--ease), box-shadow 0.9s var(--ease);
-/* lifts only where a real mouse hovers: on touch screens a finger resting while scrolling made the cards jump */
 }
+/* lifts only where a real mouse hovers */
 @media (hover: hover) and (pointer: fine) { .work-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lift); } }
 .work-card__media { border-radius: var(--r-img); overflow: hidden; background: #0f0f0f; }
 .work-card__meta { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; padding: 22px 14px 12px; }
