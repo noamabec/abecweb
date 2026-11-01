@@ -1,6 +1,6 @@
 import { renderLayout, ARROW } from './layout.js?v=9';
 import { PROJECTS } from './projects.js';
-import { mockMarkup, initMock } from './screens.js?v=2';
+import { mockMarkup, initMock } from './screens.js';
 import { initCommon, reducedMotion } from './common.js';
 
 const { gsap, ScrollTrigger } = window;
