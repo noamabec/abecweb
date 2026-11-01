@@ -80,7 +80,7 @@ main.innerHTML = `
         <li class="p-high" data-reveal>
           <span class="p-high__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
           <div class="p-high__media" aria-hidden="true">
-            <img data-clip="${base}assets/clips/${p.slug}-${i + 1}.webp" data-still="${base}assets/clips/${p.slug}-${i + 1}.jpg" alt="" width="490" height="325" decoding="async">
+            <img data-clip="${base}assets/clips/${p.slug}-${i + 1}.webp?v=2" data-still="${base}assets/clips/${p.slug}-${i + 1}.jpg" alt="" width="490" height="325" decoding="async">
             <span class="p-high__cap"><span class="mono">${two(i + 1)}</span> ${t}</span>
           </div>
           <span class="p-high__num mono">${two(i + 1)}</span>
