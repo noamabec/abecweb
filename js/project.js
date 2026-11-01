@@ -111,15 +111,11 @@ if (!reducedMotion && gsap && ScrollTrigger) {
 // play chip and fills the card, on leave it shrinks back into it (touch screens: a tap opens and closes it;
 // reduced motion: the still frame, without the burst)
 const hover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-// Android flicker test links: ?test=fade (a plain fade instead of the circle burst), ?test=noping (no pulsing ring),
-// ?test=still (the burst with a still image instead of the animated clip)
-const test = new URLSearchParams(location.search).get('test');
-if (test) document.documentElement.dataset.test = test;
 main.querySelectorAll('.p-high').forEach((card) => {
   const media = card.querySelector('.p-high__media');
   const img = media.querySelector('img');
   const chip = card.querySelector('.p-high__play');
-  const src = reducedMotion || test === 'still' ? img.dataset.still : img.dataset.clip;
+  const src = reducedMotion ? img.dataset.still : img.dataset.clip;
   let off;
   // warm the cache before the card is reached, so the clip is ready on the first hover
   new IntersectionObserver(([e], io) => { if (e.isIntersecting) { new Image().src = src; io.disconnect(); } }, { rootMargin: '300px' }).observe(card);
