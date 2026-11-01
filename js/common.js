@@ -32,6 +32,19 @@ export function initCommon() {
   });
 
   initFooterReveal();
+
+  // while the page scrolls, cards slide under a cursor that stands still; hover effects wait until it stops,
+  // or every card on the way lifts, opens its clip or starts its screen
+  // (the wheel comes a moment before the scroll, so no card catches a hover on the first frame)
+  let idle = 0;
+  const scrolling = () => {
+    root.classList.add('is-scrolling');
+    clearTimeout(idle);
+    idle = setTimeout(() => root.classList.remove('is-scrolling'), 180);
+  };
+  window.addEventListener('wheel', scrolling, { passive: true });
+  window.addEventListener('scroll', scrolling, { passive: true });
+
   if (reducedMotion || !gsap) { root.classList.add('no-motion'); return { lenis }; }
 
   // fade-up reveals

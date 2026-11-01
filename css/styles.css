@@ -85,6 +85,8 @@ bdi { unicode-bidi: isolate; }
   background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 10px;
 }
 .skip-link:focus { top: 10px; }
+/* no hover while the page scrolls under a still cursor (common.js) */
+.is-scrolling :is(.work-card, .p-high, .p-next__link, .mock) { pointer-events: none; }
 
 /* faint vertical grid lines: the clean "drawing sheet" under the page */
 main {
