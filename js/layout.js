@@ -21,7 +21,7 @@ export function renderLayout({ base = '', home = false } = {}) {
   const link = (hash) => (home ? hash : `${base}index.html${hash}`);
   const nav = [
     ['#work', 'עבודות'],
-    ['#process', 'איך זה עובד'],
+    ['#process', 'תהליך'],
     ['#about', 'עליי'],
     ['#contact', 'צור קשר'],
   ];

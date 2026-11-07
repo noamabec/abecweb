@@ -1,4 +1,4 @@
-import { renderLayout, ARROW } from './layout.js?v=9';
+import { renderLayout, ARROW } from './layout.js?v=10';
 import { PROJECTS } from './projects.js';
 import { mockMarkup, initMock } from './screens.js';
 import { initCommon, reducedMotion } from './common.js?v=3';

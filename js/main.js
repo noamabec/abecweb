@@ -1,4 +1,4 @@
-import { renderLayout, ARROW } from './layout.js?v=9';
+import { renderLayout, ARROW } from './layout.js?v=10';
 import { PROJECTS } from './projects.js';
 import { mockMarkup, initMock } from './screens.js';
 import { initParticles } from './particles.js?v=5';
@@ -108,8 +108,22 @@ function playIntro() {
   window.addEventListener('keydown', function k(e) { if (e.key === 'Escape') { onSkip(); window.removeEventListener('keydown', k); } });
 }
 
+// the hero paragraph runs as wide as the headline's longest line (CSS can't shrink a wrapped heading's box to its text)
+function fitLead() {
+  const title = document.querySelector('.hero__title');
+  const lead = document.querySelector('.hero__lead');
+  lead.style.maxWidth = '';
+  const range = document.createRange();
+  range.selectNodeContents(title);
+  const rects = [...range.getClientRects()].filter((r) => r.width);
+  if (!rects.length) return;
+  lead.style.maxWidth = `${Math.max(...rects.map((r) => r.right)) - Math.min(...rects.map((r) => r.left))}px`;
+}
+
 // wait for the fonts so the name and the hero lines measure right
 (document.fonts?.ready || Promise.resolve()).then(() => {
+  fitLead();
+  window.addEventListener('resize', fitLead);
   playIntro();
   const process = document.querySelector('.process');
   initParticles({ section: process, stages: [...process.querySelectorAll('.stage')] });
