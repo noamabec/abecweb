@@ -38,7 +38,7 @@ function heroIn(delay = 0) {
   // the headline is sketched like the photo: letters rise as a blue outline, then get inked right to left,
   // and the blue dot lands last, like the pen leaving the paper
   const dot = title.querySelector('.dot');
-  const split = window.SplitText ? new window.SplitText(title, { type: 'lines,chars', mask: 'lines', linesClass: 'line', charsClass: 'char' }) : null;
+  const split = window.SplitText ? new window.SplitText(title, { type: 'lines,words,chars', mask: 'lines', linesClass: 'line', charsClass: 'char' }) : null;
   if (split) {
     const chars = split.chars.filter((c) => !c.closest('.dot'));
     title.classList.add('is-sketching');
