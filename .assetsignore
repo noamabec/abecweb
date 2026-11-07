@@ -1,0 +1,11 @@
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+# local-only material (also in .gitignore), in case the site is ever deployed from this folder
+.claude
+assets-src
+תמונות
+אפיון-אתר-אישי.md
+design-brief.md
+serve.ps1
