@@ -117,7 +117,55 @@ function fitLead() {
   range.selectNodeContents(title);
   const rects = [...range.getClientRects()].filter((r) => r.width);
   if (!rects.length) return;
-  lead.style.maxWidth = `${Math.max(...rects.map((r) => r.right)) - Math.min(...rects.map((r) => r.left))}px`;
+  const width = Math.max(...rects.map((r) => r.right)) - Math.min(...rects.map((r) => r.left));
+  lead.style.maxWidth = `${width}px`;
+  pyramid(lead, width * 0.99);
+}
+
+// breaks the paragraph into a pyramid: each line longer than the one above, the last one the full width.
+// Words are measured in place, then the breaks that best follow a ramp from 55% to 100% of the width win
+// (tried with the fewest lines that fit and one or two more).
+function pyramid(lead, width) {
+  const words = (lead.dataset.text ||= lead.textContent.trim()).split(/\s+/);
+  lead.innerHTML = words.map((w) => `<span>${w}</span>`).join(' ');
+  const sizes = [...lead.children].map((s) => s.getBoundingClientRect().width);
+  const gap = document.createElement('span');
+  gap.style.whiteSpace = 'pre'; gap.textContent = ' ';
+  lead.append(gap);
+  const space = gap.getBoundingClientRect().width;
+  const N = words.length;
+  const line = (s, e) => sizes.slice(s, e).reduce((a, b) => a + b, 0) + space * (e - s - 1);
+  const total = line(0, N);
+  let best = null;
+  for (let n = Math.max(1, Math.ceil(total / width)); n <= Math.ceil(total / width) + 2; n++) {
+    const target = (i) => width * (n === 1 ? 1 : 0.55 + 0.45 * i / (n - 1));
+    // cost[i][e]: the best way to set words 0..e in i lines; from[i][e]: where the last of those lines starts
+    const cost = Array.from({ length: n + 1 }, () => new Array(N + 1).fill(Infinity));
+    const from = Array.from({ length: n + 1 }, () => new Array(N + 1).fill(0));
+    cost[0][0] = 0;
+    for (let i = 1; i <= n; i++) {
+      for (let e = 1; e <= N; e++) {
+        for (let s = e - 1; s >= 0; s--) {
+          const w = line(s, e);
+          if (w > width) break;
+          // a line that ends on a comma or a full stop reads better; one that ends on "את" leaves a word hanging
+          const last = words[e - 1];
+          const nudge = e === N ? 0 : /[,.?!:]$/.test(last) ? -((width * 0.12) ** 2) : last.length <= 2 ? (width * 0.12) ** 2 : 0;
+          const c = cost[i - 1][s] + (w - target(i - 1)) ** 2 + nudge;
+          if (c < cost[i][e]) { cost[i][e] = c; from[i][e] = s; }
+        }
+      }
+    }
+    if (cost[n][N] === Infinity) continue;
+    const score = cost[n][N] / n;
+    if (!best || score < best.score) {
+      const breaks = [];
+      for (let i = n, e = N; i > 0; e = from[i][e], i--) breaks.unshift([from[i][e], e]);
+      best = { score, breaks };
+    }
+  }
+  const lines = best ? best.breaks.map(([s, e]) => words.slice(s, e).join(' ')) : [words.join(' ')];
+  lead.innerHTML = lines.join('<br>');
 }
 
 // wait for the fonts so the name and the hero lines measure right
